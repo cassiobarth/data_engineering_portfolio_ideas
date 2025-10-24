@@ -1,0 +1,31 @@
+# Define a versão do docker-compose
+version: '3.8'
+
+# Define os "serviços" (contêineres) que vamos rodar
+services:
+  # O nome do nosso serviço (pode ser qualquer nome)
+  text2sql:
+    # 1. Construção: Diz ao Compose para "construir" uma imagem
+    #    usando o Dockerfile que está no diretório atual ('.')
+    build: .
+    
+    # 2. Arquivo .env: Diz ao contêiner para carregar as variáveis
+    #    de ambiente (a GOOGLE_API_KEY) do arquivo .env
+    #    que está no diretório atual.
+    env_file:
+      - .env
+      
+    # 3. Portas: Mapeia a porta 8000 do "mundo exterior" (seu PC)
+    #    para a porta 8000 "dentro" do contêiner (onde o uvicorn está rodando).
+    ports:
+      - "8000:8000"
+      
+    # 4. Reinicialização: Política para o contêiner reiniciar
+    #    automaticamente se ele falhar (a menos que tenha sido parado manualmente).
+    restart: unless-stopped
+    
+    # 5. Volumes (O MAIS IMPORTANTE)
+    #    Isso "espelha" o arquivo do banco de dados do seu PC
+    #    para dentro do contêiner.
+    volumes:
+      - ./demo.db:/code/demo.db
