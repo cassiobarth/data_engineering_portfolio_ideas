@@ -21,7 +21,7 @@ Não inclua nenhuma outra palavra, explicação, ou marcadores de markdown
 
 # Configura o modelo que vamos usar
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash", 
+    model_name="gemini-1.0-pro", 
     system_instruction=_SYSTEM_PROMPT,
     generation_config=genai.types.GenerationConfig(
         temperature=0.1

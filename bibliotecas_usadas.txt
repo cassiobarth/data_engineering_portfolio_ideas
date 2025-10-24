@@ -1,0 +1,40 @@
+[200~fastapi:
+
+O que é: É o framework web.
+
+Para que serve: É a ferramenta principal que usamos para construir a API (o "servidor"). Ele permite criar os endpoints (como o /query) que recebem requisições (a pergunta do usuário) e enviam respostas (o resultado da consulta). É conhecido por ser extremamente rápido.
+
+uvicorn[standard]:
+
+O que é: É o servidor (ASGI server).
+
+Para que serve: O FastAPI define o que a API faz, mas o uvicorn é quem de fato a executa. Ele é o "motor" que fica ouvindo por conexões na porta 8000 e passa as requisições para o FastAPI processar. O [standard] instala algumas dependências extras que o tornam mais rápido e eficiente.
+
+sqlalchemy:
+
+O que é: É um "ORM" (Mapeador Objeto-Relacional) para SQL.
+
+Para que serve: É a ponte entre o Python e o banco de dados SQLite. Em vez de lidar diretamente com a conexão do banco, nós usamos o SQLAlchemy para:
+
+Criar a "engine" de conexão (create_engine).
+
+Executar as queries SQL (session.execute) de forma segura.
+
+Inspecionar o banco para descobrir o esquema (inspect).
+
+google-generativeai:
+
+O que é: É a biblioteca cliente oficial do Google.
+
+Para que serve: É ela que permite que nosso código Python se comunique com a API do Gemini. Nós a usamos para enviar o prompt (pergunta + esquema do banco) e receber de volta o JSON com a query SQL gerada.
+
+pydantic:
+
+O que é: É uma biblioteca de validação de dados.
+
+Para que serve: O FastAPI a utiliza "por baixo dos panos" para garantir que os dados que chegam na nossa API estão no formato correto. Quando definimos class NLRequest(BaseModel): question: str, o Pydantic automaticamente verifica se o JSON recebido tem uma chave chamada "question" e se o valor dela é uma string.
+
+python-dotenv:
+
+O que é: É um utilitário.
+
