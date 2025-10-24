@@ -1,5 +1,11 @@
 # Arquivos de segredos e configurações locais
+# Ignora QUALQUER arquivo .env EM QUALQUER subpasta
 **/.env
 
 # Arquivos de banco de dados
+# Ignora QUALQUER arquivo .db EM QUALQUER subpasta
 **/*.db
+
+# Arquivos do Python
+__pycache__/
+*.pyc
