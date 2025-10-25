@@ -1,9 +1,9 @@
 import streamlit as st
 import requests
+import os  # Importa a biblioteca do sistema operacional
 
-# URL da nossa API FastAPI (o nome 'text2sql-api' é o nome do serviço
-# que vamos definir no docker-compose.yml)
-API_URL = "http://text2sql-api:8000/query"
+# Procura pela URL online no ambiente, se não achar, usa a URL local
+API_URL = os.getenv("API_URL", "http://text2sql-api:8000/query")
 
 # --- Configuração da Página ---
 st.set_page_config(
