@@ -1,31 +1,36 @@
-# Define a versão do docker-compose
 version: '3.8'
 
-# Define os "serviços" (contêineres) que vamos rodar
 services:
-  # O nome do nosso serviço (pode ser qualquer nome)
-  text2sql:
-    # 1. Construção: Diz ao Compose para "construir" uma imagem
-    #    usando o Dockerfile que está no diretório atual ('.')
-    build: .
-    
-    # 2. Arquivo .env: Diz ao contêiner para carregar as variáveis
-    #    de ambiente (a GOOGLE_API_KEY) do arquivo .env
-    #    que está no diretório atual.
+  # --- SERVIÇO 1: A API (Backend) ---
+  text2sql-api:
+    build:
+      # Contexto: A pasta atual
+      context: .
+      # Dockerfile: O arquivo que renomeamos
+      dockerfile: Dockerfile.api
     env_file:
       - .env
-      
-    # 3. Portas: Mapeia a porta 8000 do "mundo exterior" (seu PC)
-    #    para a porta 8000 "dentro" do contêiner (onde o uvicorn está rodando).
-    ports:
-      - "8000:8000"
-      
-    # 4. Reinicialização: Política para o contêiner reiniciar
-    #    automaticamente se ele falhar (a menos que tenha sido parado manualmente).
+    # A porta da API (8000) SÓ precisa ser vista pelos outros
+    # contêineres. Não precisamos mais expô-la para o seu PC.
+    # ports:
+    #   - "8000:8000"
     restart: unless-stopped
-    
-    # 5. Volumes (O MAIS IMPORTANTE)
-    #    Isso "espelha" o arquivo do banco de dados do seu PC
-    #    para dentro do contêiner.
     volumes:
       - ./demo.db:/code/demo.db
+
+  # --- SERVIÇO 2: A INTERFACE (Frontend) ---
+  frontend:
+    build:
+      # Contexto: A pasta 'frontend'
+      context: ./frontend
+      # Dockerfile: O arquivo que criamos
+      dockerfile: Dockerfile.frontend
+    ports:
+      # Mapeia a porta 8501 (Streamlit) do contêiner
+      # para a porta 8501 do seu computador.
+      - "8501:8501"
+    restart: unless-stopped
+    # O frontend depende da API. Ele só deve iniciar
+    # depois que a API estiver pronta.
+    depends_on:
+      - text2sql-api
