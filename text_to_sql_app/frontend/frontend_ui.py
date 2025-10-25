@@ -1,9 +1,16 @@
 import streamlit as st
 import requests
-import os  # Importa a biblioteca do sistema operacional
+import os
+
+# --- AVISO DE INICIALIZAÇÃO (NOVO) ---
+# Este comando 'toast' mostra um aviso popup rápido assim que a página carrega.
+st.toast("Este é um app gratuito e pode demorar até 60s para 'acordar' no primeiro acesso. Obrigado pela paciência! 🚀", icon="⏱️")
+# -------------------------------------
 
 # Procura pela URL online no ambiente, se não achar, usa a URL local
+# (Esta é a mudança que fizemos antes para o Render)
 API_URL = os.getenv("API_URL", "http://text2sql-api:8000/query")
+
 
 # --- Configuração da Página ---
 st.set_page_config(
@@ -27,7 +34,8 @@ with st.form(key="query_form"):
 
 # --- Lógica de Backend ---
 if submit_button and question:
-    with st.spinner("Pensando... 🧠"):
+    # Mostra um spinner ENQUANTO a API (que também pode estar "dormindo") acorda
+    with st.spinner("Conectando aos servidores... 🧠"):
         try:
             # 1. Envia a pergunta para a API FastAPI
             response = requests.post(API_URL, json={"question": question})
@@ -51,6 +59,6 @@ if submit_button and question:
 
         except requests.exceptions.ConnectionError:
             st.error("Erro de Conexão: Não foi possível conectar à API.")
-            st.write("Verifique se o serviço 'text2sql-api' está rodando.")
+            st.write(f"Verifique se o serviço da API ({API_URL}) está acessível.")
         except Exception as e:
             st.error(f"Ocorreu um erro inesperado: {e}")
